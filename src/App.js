@@ -29,7 +29,7 @@ const App = () => {
   // }
 
   useEffect(() => {
-    signal = new IonSFUJSONRPCSignal("ws://localhost:7000/ws");
+    signal = new IonSFUJSONRPCSignal("wss://sfu.collablens.in/ws");
     client = new Client(signal, config);
     signal.onopen = () => client.join("test room");
 
