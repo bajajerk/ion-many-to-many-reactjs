@@ -18,6 +18,7 @@ const App = () => {
         urls: "stun:stun.l.google.com:19302",
       },
     ],
+    codec: 'h264',
   };
   // http://localhost:8000/?publish=true
   // const URL = new URLSearchParams(window.location.search).get("publish");
