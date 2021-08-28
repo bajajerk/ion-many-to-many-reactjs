@@ -34,7 +34,7 @@ const App = () => {
         // if (!isPub) {
         client.ontrack = (track, stream) => {
             console.log("got track: ", track.id, track.kind,  "for stream: ", stream.id);
-            if (track.kind === 'video') {
+            if (track.kind === 'video' || track.kind === 'audio') {
                 track.onunmute = () => {
                     // trackIDs.current = trackIds.current.push(track.id)
                     console.log(track.id, trackIds)
@@ -105,7 +105,7 @@ const App = () => {
         let uniqueStreams = [];
         // eslint-disable-next-line array-callback-return
         streams.map(stream => {
-            if(uniqueStreams.filter(us => us.id === stream.id).length === 0){
+            if(uniqueStreams.filter(us => us.id === stream.stream.id).length === 0){
                 uniqueStreams.push(stream);
             }
         })
