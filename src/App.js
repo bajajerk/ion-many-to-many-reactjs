@@ -135,7 +135,7 @@ const App = () => {
                 {removeDuplicateStreams(remoteStream).map((val, index) => {
                     return (
                         <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
-                               className="bg-black w-full h-full" controls autoplay></video>
+                               className="bg-black w-full h-full" controls></video>
                     )
                 })}
             </div>
