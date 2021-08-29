@@ -34,12 +34,11 @@ const App = () => {
         // if (!isPub) {
         client.ontrack = (track, stream) => {
             console.log("got track: ", track.id, track.kind,  "for stream: ", stream.id);
-            if (track.kind === 'video' || track.kind === 'audio') {
+            if (track.kind === 'video') {
                 track.onunmute = () => {
                     // trackIDs.current = trackIds.current.push(track.id)
-                    console.log(track.id, trackIds)
                     setTrackIds(trackIds => [...trackIds, track.id])
-                    setRemoteStream(remoteStream => [...remoteStream, {id: track.id, stream: stream}]);
+                    setRemoteStream(remoteStream => [...remoteStream, {id: track.id, stream: stream, autoplay: true}]);
                     setCurrentVideo(track.id);
                     // subVideo.current.srcObject = stream;
                     // subVideo.current.autoplay = true;
@@ -62,6 +61,8 @@ const App = () => {
         remoteStream.map((ev) => {
             if (ev.id === currentVideo) {
                 videoEl.srcObject = ev.stream;
+                videoEl.autoplay = true;
+
             }
         })
     }, [currentVideo]);
@@ -102,14 +103,18 @@ const App = () => {
 
 
     const removeDuplicateStreams = (streams) => {
+        let uniqueStreamsIds = []
         let uniqueStreams = [];
+
         // eslint-disable-next-line array-callback-return
         streams.map(stream => {
-            if(uniqueStreams.filter(us => us.id === stream.stream.id).length === 0){
-                uniqueStreams.push(stream);
+            console.log(uniqueStreamsIds, stream.stream.id )
+            if(uniqueStreamsIds.indexOf(stream.stream.id) === -1){
+                uniqueStreams.push(stream)
+                uniqueStreamsIds.push(stream.stream.id);
             }
         })
-        console.log(uniqueStreams)
+        console.log(uniqueStreamsIds, uniqueStreams)
         return uniqueStreams;
     }
     return (
@@ -130,7 +135,7 @@ const App = () => {
                 {removeDuplicateStreams(remoteStream).map((val, index) => {
                     return (
                         <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
-                               className="bg-black w-full h-full" controls></video>
+                               className="bg-black w-full h-full" controls autoplay></video>
                     )
                 })}
             </div>
