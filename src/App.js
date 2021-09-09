@@ -126,12 +126,7 @@ const App = () => {
 
     const subscribedVideo = (val, index, height, width) => {
         return (
-            <div style={{
-                width: "40%",
-                height: 100,
-                marginBottom: 12
-            }
-            }>
+            <div>
                 <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
                        className="bg-black" width={width} height={height} controls
                        autoPlay></video>
@@ -159,19 +154,8 @@ const App = () => {
                 </>}
 
                 {totalSteams > 1 &&
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                    flexWrap: "wrap"
-                }}>
-                    <div style={{
-                        width: "40%",
-                        height: 100,
-                        marginBottom: 12
-                    }}>
+                <div>
+                    <div>
                         {publishVideo(pubShow, pubVideo, window.innerHeight, window.innerWidth * widthProportion)}
                     </div>
                     {removeDuplicateStreams(remoteStream).map((val, index) => {
