@@ -33,7 +33,7 @@ const App = () => {
 
         // if (!isPub) {
         client.ontrack = (track, stream) => {
-            console.log("got track: ", track.id, track.kind,  "for stream: ", stream.id);
+            console.log("got track: ", track.id, track.kind, "for stream: ", stream.id);
             if (track.kind === 'video') {
                 track.onunmute = () => {
                     // trackIDs.current = trackIds.current.push(track.id)
@@ -108,14 +108,57 @@ const App = () => {
 
         // eslint-disable-next-line array-callback-return
         streams.map(stream => {
-            console.log(uniqueStreamsIds, stream.stream.id )
-            if(uniqueStreamsIds.indexOf(stream.stream.id) === -1){
+            console.log(uniqueStreamsIds, stream.stream.id)
+            if (uniqueStreamsIds.indexOf(stream.stream.id) === -1) {
                 uniqueStreams.push(stream)
                 uniqueStreamsIds.push(stream.stream.id);
             }
         })
         console.log(uniqueStreamsIds, uniqueStreams)
         return uniqueStreams;
+    }
+
+
+    const publishVideo = (pubShow, pubVideo, height, width) => {
+        return <video className={`bg-black ${pubShow}`} controls ref={pubVideo}  width={width} height={height} ></video>
+    }
+
+    const subscribedVideo = (val, index, height, width) => {
+        return (
+            <>
+            <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
+                   className="bg-black" width={width} height={height} controls
+                   autoPlay></video>
+                </>
+        )
+    }
+
+
+    const videoGrid = (pubShow, pubVideo, remoteStream) => {
+        console.log(pubVideo.current?.srcObject)
+        const isPublishVideoAvailable = (pubVideo.current && pubVideo.current?.srcObject) !==null;
+        console.log(isPublishVideoAvailable)
+        const totalSteams = removeDuplicateStreams(remoteStream).length + (isPublishVideoAvailable ? 1 : 0) ;
+        console.log(totalSteams)
+        const widthProportion = totalSteams > 1 ? .5 : 1;
+        return (
+            <>
+                <div>
+                    {publishVideo(pubShow, pubVideo, window.innerHeight, window.innerWidth * widthProportion)}
+                </div>
+                {removeDuplicateStreams(remoteStream).map((val, index) => {
+                    return (
+                        subscribedVideo(val, index, window.innerHeight, window.innerWidth * widthProportion)
+                    )
+                })}
+                {/*{publishVideo(pubShow, pubVideo, 100, 100)}*/}
+                {/*{removeDuplicateStreams(remoteStream).map((val, index) => {*/}
+                {/*    return (*/}
+                {/*        subscribedVideo(val, index, 100, 100)*/}
+                {/*    )*/}
+                {/*})}*/}
+            </>
+        )
     }
     return (
         <div className="flex flex-col h-screen relative">
@@ -130,14 +173,15 @@ const App = () => {
                     </button>
                 </div>
             </header>
-            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-5">
-                <video className={`bg-black h-full w-full ${pubShow}`} controls ref={pubVideo}></video>
-                {removeDuplicateStreams(remoteStream).map((val, index) => {
-                    return (
-                        <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
-                               className="bg-black w-full h-full" controls></video>
-                    )
-                })}
+            <div>
+                {videoGrid(pubShow, pubVideo, remoteStream)}
+                {/*<video className={`bg-black h-full w-full ${pubShow}`} controls ref={pubVideo}></video>*/}
+                {/*{removeDuplicateStreams(remoteStream).map((val, index) => {*/}
+                {/*    return (*/}
+                {/*        <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}*/}
+                {/*               className="bg-black" width={window.innerWidth*.5} height={window.innerHeight*.5}  controls autoPlay></video>*/}
+                {/*    )*/}
+                {/*})}*/}
             </div>
         </div>
     );
