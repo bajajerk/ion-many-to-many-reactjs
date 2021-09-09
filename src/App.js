@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Client, LocalStream} from 'ion-sdk-js';
 import {IonSFUJSONRPCSignal} from 'ion-sdk-js/lib/signal/json-rpc-impl';
+import {Grid} from "@material-ui/core";
 
 let client, signal;
 
@@ -120,37 +121,67 @@ const App = () => {
 
 
     const publishVideo = (pubShow, pubVideo, height, width) => {
-        return <video className={`bg-black ${pubShow}`} controls ref={pubVideo}  width={width} height={height} ></video>
+        return <video className={`bg-black ${pubShow}`} controls ref={pubVideo} width={width} height={height}></video>
     }
 
     const subscribedVideo = (val, index, height, width) => {
         return (
-            <>
-            <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
-                   className="bg-black" width={width} height={height} controls
-                   autoPlay></video>
-                </>
+            <div style={{
+                width: "40%",
+                height: 100,
+                marginBottom: 12
+            }
+            }>
+                <video key={index} ref={(el) => remoteVideoRef.current[val.id] = el}
+                       className="bg-black" width={width} height={height} controls
+                       autoPlay></video>
+            </div>
         )
     }
 
 
     const videoGrid = (pubShow, pubVideo, remoteStream) => {
         console.log(pubVideo.current?.srcObject)
-        const isPublishVideoAvailable = (pubVideo.current && pubVideo.current?.srcObject) !==null;
+        const isPublishVideoAvailable = (pubVideo.current && pubVideo.current?.srcObject) !== null;
         console.log(isPublishVideoAvailable)
-        const totalSteams = removeDuplicateStreams(remoteStream).length + (isPublishVideoAvailable ? 1 : 0) ;
-        console.log(totalSteams)
+        const totalSteams = removeDuplicateStreams(remoteStream).length + (isPublishVideoAvailable ? 1 : 0);
+        console.log("total streams are", totalSteams)
         const widthProportion = totalSteams > 1 ? .5 : 1;
         return (
             <>
-                <div>
+                {totalSteams === 1 && <>
                     {publishVideo(pubShow, pubVideo, window.innerHeight, window.innerWidth * widthProportion)}
+                    {removeDuplicateStreams(remoteStream).map((val, index) => {
+                        return (
+                            subscribedVideo(val, index, window.innerHeight, window.innerWidth * widthProportion)
+                        )
+                    })}
+                </>}
+
+                {totalSteams > 1 &&
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "100%",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    flexWrap: "wrap"
+                }}>
+                    <div style={{
+                        width: "40%",
+                        height: 100,
+                        marginBottom: 12
+                    }}>
+                        {publishVideo(pubShow, pubVideo, window.innerHeight, window.innerWidth * widthProportion)}
+                    </div>
+                    {removeDuplicateStreams(remoteStream).map((val, index) => {
+                        return (
+                            subscribedVideo(val, index, window.innerHeight, window.innerWidth * widthProportion)
+                        )
+                    })}
                 </div>
-                {removeDuplicateStreams(remoteStream).map((val, index) => {
-                    return (
-                        subscribedVideo(val, index, window.innerHeight, window.innerWidth * widthProportion)
-                    )
-                })}
+                }
+
                 {/*{publishVideo(pubShow, pubVideo, 100, 100)}*/}
                 {/*{removeDuplicateStreams(remoteStream).map((val, index) => {*/}
                 {/*    return (*/}
