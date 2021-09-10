@@ -27,6 +27,10 @@ const App = () => {
         codec: 'h264',
     };
 
+    const startStream = () => {
+
+    }
+
     useEffect(() => {
         signal = new IonSFUJSONRPCSignal("wss://sfu.collablens.in/ws");
         client = new Client(signal, config);
@@ -59,6 +63,7 @@ const App = () => {
     useEffect(() => {
         const videoEl = remoteVideoRef.current[currentVideo];
         // let stream;
+        console.log(videoEl)
         remoteStream.map((ev) => {
             if (ev.id === currentVideo) {
                 videoEl.srcObject = ev.stream;
@@ -143,36 +148,35 @@ const App = () => {
         console.log("total streams are", totalSteams)
         const widthProportion = totalSteams > 1 ? .5 : 1;
         return (
-            <>
-                {totalSteams === 1 && <>
-                    {publishVideo(pubShow, pubVideo, window.innerHeight, window.innerWidth * widthProportion)}
-                    {removeDuplicateStreams(remoteStream).map((val, index) => {
-                        return (
-                            subscribedVideo(val, index, window.innerHeight, window.innerWidth * widthProportion)
-                        )
-                    })}
-                </>}
+            <div style={{display: 'flex', flexDirection: 'row'}}>
 
-                {totalSteams > 1 &&
-                <div>
-                    <div>
-                        {publishVideo(pubShow, pubVideo, window.innerHeight, window.innerWidth * widthProportion)}
-                    </div>
+                    {publishVideo(pubShow, pubVideo, window.innerHeight *  widthProportion, window.innerWidth * widthProportion)}
                     {removeDuplicateStreams(remoteStream).map((val, index) => {
                         return (
-                            subscribedVideo(val, index, window.innerHeight, window.innerWidth * widthProportion)
+                            subscribedVideo(val, index, window.innerHeight *  widthProportion, window.innerWidth * widthProportion)
                         )
                     })}
                 </div>
-                }
 
-                {/*{publishVideo(pubShow, pubVideo, 100, 100)}*/}
-                {/*{removeDuplicateStreams(remoteStream).map((val, index) => {*/}
-                {/*    return (*/}
-                {/*        subscribedVideo(val, index, 100, 100)*/}
-                {/*    )*/}
-                {/*})}*/}
-            </>
+                //
+                // {totalSteams > 1 &&
+                // <div>
+                //     {/*<div>*/}
+                //     {/*    {publishVideo(pubShow, pubVideo, window.innerHeight  * widthProportion, window.innerWidth * widthProportion)}*/}
+                //     {/*</div>*/}
+                //     {removeDuplicateStreams(remoteStream).map((val, index) => {
+                //         return (
+                //             <>
+                //                 <p> new video </p>
+                //                 {subscribedVideo(val, index, window.innerHeight  * widthProportion, window.innerWidth * widthProportion)}
+                //             </>
+                //         )
+                //     })}
+                // </div>
+                // }
+
+
+            // </>
         )
     }
     return (
