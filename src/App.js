@@ -28,10 +28,6 @@ const App = () => {
     };
 
     const startStream = () => {
-
-    }
-
-    useEffect(() => {
         signal = new IonSFUJSONRPCSignal("wss://sfu.collablens.in/ws");
         client = new Client(signal, config);
         signal.onopen = () => client.join("test room");
@@ -57,6 +53,11 @@ const App = () => {
             }
 
         }
+
+    }
+
+    useEffect(() => {
+        // startStream();
         // }
     }, []);
 
@@ -184,12 +185,15 @@ const App = () => {
             <header className="flex h-16 justify-center items-center text-xl bg-black text-white">
                 <div>ion-sfu</div>
                 <div className="absolute top-2 right-5">
+                    <button  className="bg-blue-500 px-4 py-2 text-white rounded-lg mr-5"
+                            onClick={() => startStream()}>Start stream Camera
+                    </button>
                     <button id="bnt_pubcam" className="bg-blue-500 px-4 py-2 text-white rounded-lg mr-5"
                             onClick={() => start(true)}>Publish Camera
                     </button>
-                    <button id="bnt_pubscreen" className="bg-green-500 px-4 py-2 text-white rounded-lg"
-                            onClick={() => start(false)}>Publish Screen
-                    </button>
+                    {/*<button id="bnt_pubscreen" className="bg-green-500 px-4 py-2 text-white rounded-lg"*/}
+                    {/*        onClick={() => start(false)}>Publish Screen*/}
+                    {/*</button>*/}
                 </div>
             </header>
             <div>
